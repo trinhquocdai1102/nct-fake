@@ -76,6 +76,118 @@ const SkeletonExplore: FC<SkeletonExploreProps> = ({ radio, col }) => {
                     style={{ aspectRatio: radio }}
                     className={`rounded-md skeleton`}
                 ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
+                <div
+                    style={{ aspectRatio: radio }}
+                    className={`rounded-md skeleton`}
+                ></div>
             </GridLayout>
         </div>
     );

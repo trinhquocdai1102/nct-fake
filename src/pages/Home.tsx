@@ -48,12 +48,12 @@ const Home = () => {
                             <SongList songs={data?.newRelease?.song} />
                         </div>
 
-                        <div className='mb-5'>
+                        {/* <div className='mb-5'>
                             <h1 className='mb-5 font-semibold text-xl'>
                                 BXH Bài Hát
                             </h1>
-                            <SongRanking songs={data?.ranking?.song} />
-                        </div>
+                            <SongRanking data={data?.ranking?.song} />
+                        </div> */}
 
                         <div className='mb-5 line'>
                             <h1 className='mb-5 font-semibold text-xl'>
@@ -77,58 +77,7 @@ const Home = () => {
                             <h1 className='mb-5 font-semibold text-xl'>
                                 Video Hot
                             </h1>
-                            <div className='flex flex-wrap video-hot'>
-                                {data?.video.slice(0, 6).map((item) => {
-                                    return (
-                                        <Fragment key={item.key}>
-                                            <div>
-                                                <Link to='#'>
-                                                    <div className='line overflow-hidden w-full'>
-                                                        <div className='hover:scale-[1.1] ease-in duration-[400ms]'>
-                                                            <img
-                                                                src={
-                                                                    item.thumbnail
-                                                                }
-                                                                alt={item.title}
-                                                            />
-                                                            <div className='absolute top-[46%] left-[46%] text-[40px] hover:scale-[1.2] brightness-100 text-white hidden'>
-                                                                <AiFillPlayCircle />
-                                                            </div>
-                                                        </div>
-                                                        <div className='absolute right-[10px] bottom-[8px] text-[10px] text-white bg-main-color px-2 rounded'>
-                                                            {item.duration}
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                                <div className='mt-[8px]'>
-                                                    <Link
-                                                        to='#'
-                                                        className='text-sm font-medium'
-                                                    >
-                                                        {item.title}
-                                                    </Link>
-                                                </div>
-                                                <div>
-                                                    {item.artists.map((i) => {
-                                                        return (
-                                                            <Link
-                                                                to='#'
-                                                                key={i.artistId}
-                                                                className='text-13px text-main-color'
-                                                            >
-                                                                {i.name}
-                                                                <span className='last:hidden'>
-                                                                    ,{' '}
-                                                                </span>
-                                                            </Link>
-                                                        );
-                                                    })}
-                                                </div>
-                                            </div>
-                                        </Fragment>
-                                    );
-                                })}
-                            </div>
+                            <Slider video={true} banners={data?.video} />
                         </div>
 
                         <div className='mb-5 line'>

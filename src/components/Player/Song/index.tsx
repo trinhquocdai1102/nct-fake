@@ -8,31 +8,42 @@ import React, {
 } from 'react';
 import useSWR from 'swr';
 import PlayerThumb from './PlayerThumb';
-import { PlayerContext, Song } from '../../context/PlayerContext';
-import { getSong } from '../../apis/song';
+import { SongPlayerContext } from '../../../context/SongPlayerContext';
+import { getSong } from '../../../apis/song';
 import { toast } from 'react-hot-toast';
 import PlayerController from './PlayerController';
-import { useDispatch, useSelector } from 'react-redux';
-import { addFavorite } from '../../store/playerSlice';
+import { VideoPlayerContext } from '../../../context/VideoPlayerContext';
+import { AuthContext } from '../../../context/AuthContext';
+import { addDoc } from 'firebase/firestore';
+import { addMusicFromLocal } from '../../../utils/history';
 
-const Player = () => {
-    const dispatch = useDispatch();
-    const { songIds, currentIndex, setCurrentIndex } =
-        useContext(PlayerContext);
-    const songKey = songIds && songIds[currentIndex]?.key;
+const SongPlayer = () => {
+    const {
+        audioRef,
+        audioPlaying,
+        setAudioPlaying,
+        songList,
+        currentIndex,
+        setCurrentIndex,
+        favoriteCollection,
+        favoriteList,
+        handlePlayPause,
+    } = useContext(SongPlayerContext);
+    const { setOpenFormLogin, isLogged } = useContext(AuthContext);
+
+    const { videoPlaying } = useContext(VideoPlayerContext);
+    const songKey = songList && songList[currentIndex]?.key;
     const { data } = useSWR(
         `player-${songKey}`,
         () => {
-            if (songIds && songKey) {
+            if (songList && songKey) {
                 return getSong(songKey);
             }
         },
         {}
     );
-
-    const favorList = useSelector((state: any) => state.players);
-    const [playing, setPlaying] = useState(false);
     const [loading, _setLoading] = useState(false);
+    const [moreOption, setMoreOption] = useState(false);
     const [playRandom, setPlayRandom] = useState(false);
     const [playLoop, setPlayLoop] = useState({
         color: 'second-color',
@@ -46,18 +57,8 @@ const Player = () => {
             100
     );
 
-    const audioRef = useRef<any>();
-    const progressRef = useRef<any>();
-
-    const handlePlayPause = useCallback(() => {
-        if (playing) {
-            audioRef.current.pause();
-            setPlaying(false);
-        } else {
-            audioRef.current.play();
-            setPlaying(true);
-        }
-    }, [playing]);
+    const optionRef = useRef<HTMLDivElement | any>();
+    const progressRef = useRef<HTMLDivElement | any>();
 
     const handleAudioUpdate = () => {
         if (!audioRef.current) {
@@ -70,45 +71,53 @@ const Player = () => {
         setVolume(e.target.value);
     }, []);
 
-    const handleAddToFavorite = () => {
-        if (favorList.find((item: Song) => item.key === data?.song?.key)) {
+    const handleAddToFavorite = async () => {
+        const checkExist = favoriteList?.find(
+            (item: any) =>
+                item?.key === data?.song?.key && item?.user === isLogged?.email
+        );
+
+        if (!isLogged) {
+            setOpenFormLogin(true);
+        } else if (isLogged && checkExist) {
             toast.error('Bài hát đã có trong DS yêu thích');
             return null;
         } else {
-            dispatch(
-                addFavorite({
-                    key: data?.song?.key,
-                    thumbnail: data?.song?.thumbnail,
-                    title: data?.song?.title,
-                    artists: data?.song?.artists
-                        ?.map((item: any) => item.name)
-                        .join(', '),
-                })
-            );
+            if (data?.song) {
+                await addDoc(favoriteCollection, {
+                    ...data?.song,
+                    user: isLogged.email,
+                });
+                toast.success('Đã thêm vào danh sách yêu thích');
+            } else if (isLogged?.email === undefined) {
+                toast.error('Đã xảy ra lỗi');
+            } else {
+                toast.error('Bài hát không tồn tại');
+            }
         }
     };
 
     const handleAudioEnded = () => {
         if (playLoop.loop === 'all') {
-            if (songIds.length > 1) {
+            if (songList.length > 1) {
                 handleNextSong();
             } else {
                 audioRef.current.play();
             }
         } else if (playLoop.loop === '1') {
-            setPlaying(true);
+            setAudioPlaying(true);
             audioRef.current.play();
             setCurrentTime(0);
         } else {
             audioRef.current.pause();
-            setPlaying(false);
+            setAudioPlaying(false);
         }
     };
 
     const handleNextSong = () => {
         if (!playRandom) {
             setCurrentIndex((prev: number) => {
-                if (prev >= songIds.length - 1) {
+                if (prev >= songList.length - 1) {
                     return 0;
                 }
                 return prev + 1;
@@ -116,7 +125,7 @@ const Player = () => {
         } else {
             setCurrentIndex(() => {
                 const randomNum = Math.floor(
-                    Math.random() * songIds.length - 1
+                    Math.random() * songList.length - 1
                 );
 
                 return randomNum;
@@ -128,7 +137,7 @@ const Player = () => {
         if (!playRandom) {
             setCurrentIndex((prev: number) => {
                 if (prev <= 0) {
-                    return songIds.length - 1;
+                    return songList.length - 1;
                 }
 
                 return prev - 1;
@@ -136,7 +145,7 @@ const Player = () => {
         } else {
             setCurrentIndex(() => {
                 const randomNum = Math.floor(
-                    Math.random() * songIds.length - 1
+                    Math.random() * songList.length - 1
                 );
 
                 return randomNum;
@@ -145,8 +154,8 @@ const Player = () => {
     };
 
     const songMemo = useMemo(() => {
-        return songIds;
-    }, [songIds]);
+        return songList;
+    }, [songList]);
 
     const setCurrentIndexMemo = useCallback(
         (index: number) => setCurrentIndex(index),
@@ -199,16 +208,30 @@ const Player = () => {
         setShowListSong((prev) => !prev);
     }, []);
 
+    const handleOpenMoreOption = () => {
+        if (!moreOption) {
+            setMoreOption(true);
+        } else if (moreOption) {
+            setMoreOption(false);
+        }
+    };
+
     useEffect(() => {
-        if (!audioRef.current || !songIds || !data?.song?.streamUrls) return;
+        if (
+            !audioRef.current ||
+            !songList ||
+            !data?.song?.streamUrls ||
+            videoPlaying === true
+        )
+            return;
         audioRef.current.src = data?.song?.streamUrls[0]?.streamUrl;
         audioRef.current.play();
-    }, [songIds, data, songKey]);
+    }, [songList, data, songKey]);
 
     useEffect(() => {
         if (data?.song?.streamUrls?.length === 0) {
             toast.error('Không tìm thấy bài hát!');
-            if (currentIndex === songIds.length - 1) {
+            if (currentIndex === songList.length - 1) {
                 return;
             }
             return setCurrentIndex((prev: number) => prev + 1);
@@ -232,13 +255,37 @@ const Player = () => {
     }, [data]);
 
     useEffect(() => {
-        localStorage.setItem('nct-current-list-song', JSON.stringify(songIds));
+        if (videoPlaying) {
+            audioRef?.current?.pause();
+        }
+    }, [videoPlaying]);
+
+    useEffect(() => {
+        localStorage.setItem('nct-current-list-song', JSON.stringify(songList));
         localStorage.setItem('nct-current-index', JSON.stringify(currentIndex));
         localStorage.setItem('nct-current-volume', JSON.stringify(volume));
-    }, [songIds, currentIndex, volume]);
+    }, [songList, currentIndex, volume]);
+
+    useEffect(() => {
+        const handler = (e: { target: any }) => {
+            if (!optionRef.current.contains(e.target)) {
+                setMoreOption(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => {
+            document.removeEventListener('mousedown', handler);
+        };
+    });
+
+    useEffect(() => {
+        if (songList[currentIndex] && songList[currentIndex]?.key) {
+            addMusicFromLocal(songList[currentIndex]);
+        }
+    }, [currentIndex]);
 
     return (
-        <div className='bg-white h-full'>
+        <div className='bg-slate-50 h-full'>
             <div className='flex flex-col justify-between h-full bg-slate-50'>
                 <PlayerThumb
                     id={data?.song?.key}
@@ -258,12 +305,14 @@ const Player = () => {
                     progressRef={progressRef}
                     currentTime={currentTime}
                     duration={duration}
+                    optionRef={optionRef}
+                    moreOption={moreOption}
                     handleNextSong={handleNextSong}
                     handlePrevSong={handlePrevSong}
                     handleVolumeChange={handleVolumeChange}
                     handlePlayPause={handlePlayPause}
                     handleSeekTime={handleSeekTime}
-                    playing={playing}
+                    playing={audioPlaying}
                     showListSong={showListSong}
                     volume={volume}
                     toggleListSong={toggleListSong}
@@ -272,10 +321,11 @@ const Player = () => {
                     handlePlayRandom={handlePlayRandom}
                     handlePlayLoop={handlePlayLoop}
                     handleAddToFavorite={handleAddToFavorite}
+                    handleOpenMoreOption={handleOpenMoreOption}
                 />
                 <audio
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
+                    onPlay={() => setAudioPlaying(true)}
+                    onPause={() => setAudioPlaying(false)}
                     onEnded={handleAudioEnded}
                     onTimeUpdate={handleAudioUpdate}
                     ref={audioRef}
@@ -285,4 +335,4 @@ const Player = () => {
     );
 };
 
-export default Player;
+export default SongPlayer;

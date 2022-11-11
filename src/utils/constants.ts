@@ -3,6 +3,12 @@ export const imgNotFound =
 
 export const img404 = 'https://i.imgur.com/oRBZxTV.png';
 
+export const avatarDefault =
+    'https://avatar-ex-swe.nixcdn.com/avatar/2022/08/23/b/8/3/d/1661244178639.jpg';
+
+export const favoriteImg =
+    'https://stc-id.nixcdn.com/v12/static/media/default_personal_playlist.5f37f4f5.png';
+
 export const formatTime = (seconds: number) => {
     try {
         const date = new Date(0);

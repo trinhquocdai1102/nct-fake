@@ -1,4 +1,4 @@
-import client from './client';
+import { client } from './client';
 
 export const getExplore = async (
     page: number = 1,

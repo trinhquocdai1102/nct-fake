@@ -10,6 +10,8 @@ export const playerSlice = createSlice({
             if (action.payload.key !== undefined) {
                 state.push(action.payload);
                 toast.success('Đã thêm vào danh sách yêu thích');
+            } else if (action.payload.user.email === undefined) {
+                toast.error('Đã xảy ra lỗi');
             } else {
                 toast.error('Bài hát không tồn tại');
             }

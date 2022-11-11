@@ -10,9 +10,10 @@ import { BsKeyboard } from 'react-icons/bs';
 import { FaFacebookF } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 import { TfiClose } from 'react-icons/tfi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { AuthContext } from '../context/AuthContext';
+import { addUser } from '../store/authSlice';
 
 const Login = () => {
     const {
@@ -22,9 +23,9 @@ const Login = () => {
         setOpenFormRegister,
         setLoading,
     } = useContext(AuthContext);
+    const navigate = useNavigate();
     const [loginValue, setLoginValue] = useState<any>();
-    const formRef = useRef<any>();
-
+    const formRef = useRef<HTMLDivElement | any>();
     const handleCloseFormLogin = () => {
         setOpenFormLogin(false);
     };
@@ -37,7 +38,9 @@ const Login = () => {
                 loginValue.email,
                 loginValue.password
             );
+            addUser(loginValue);
             setLoading(false);
+            navigate('/');
             toast.success('Đăng nhập thành công');
             setOpenFormLogin(false);
             setOpenFormRegister(false);
@@ -86,17 +89,19 @@ const Login = () => {
     });
 
     useEffect(() => {
-        setLoginValue(currentUser);
+        if (currentUser) {
+            setLoginValue(currentUser);
+        }
     }, [currentUser]);
     return (
         <div className='fixed flex justify-center items-center top-0 right-0 left-0 bottom-0 w-full bg-[rgba(0,0,0,0.5)] z-[999]'>
             <div
-                className='w-full max-w-[480px] bg-white text-md rounded-md line'
+                className='w-full max-w-[480px] bg-white rounded-md line'
                 ref={formRef}
             >
                 <div className='absolute right-[20px] top-[20px]'>
                     <TfiClose
-                        className='text-[20px] text-main-color cursor-pointer hover:text-black'
+                        className='text-xl text-main-color cursor-pointer hover:text-black'
                         onClick={handleCloseFormLogin}
                     />
                 </div>
@@ -138,11 +143,20 @@ const Login = () => {
                             }}
                         />
                     </div>
-                    <div className='flex gap-2 w-[80%] max-w[380px] pl-1 items-center text-sm pt-[12px]'>
-                        <input type='checkbox' className='mt-[-3px]' />
+                    {/* <div className='flex gap-2 w-[80%] max-w[380px] pl-1 items-center text-sm '>
+                        <input
+                            type='checkbox'
+                            className='mt-[-3px]'
+                            onChange={(e) => {
+                                setCurrentUser({
+                                    ...currentUser,
+                                    remember: e.target.checked,
+                                });
+                            }}
+                        />
                         <p>Ghi nhớ</p>
-                    </div>
-                    <div className='flex items-center w-[80%] max-w[380px] h-[40px] line'>
+                    </div> */}
+                    <div className='flex items-center w-[80%] max-w[380px] h-[40px] line pt-[12px]'>
                         <button
                             onClick={handleLogin}
                             className='w-full bg-third-color h-[37px] text-sm bg-gradient-to-r from-[#2F80ED] to-[#00AEEF] rounded-md text-white font-bold mt-[24px]'

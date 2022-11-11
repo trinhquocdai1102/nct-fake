@@ -1,7 +1,7 @@
 import React, { FC, memo, useContext } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { PlayerContext } from '../../context/PlayerContext';
-import { imgNotFound } from '../../utils/constants';
+import { SongPlayerContext } from '../../../context/SongPlayerContext';
+import { imgNotFound } from '../../../utils/constants';
 
 interface ListSongItemProps {
     title: string;
@@ -18,7 +18,7 @@ const SongItem: FC<ListSongItemProps> = ({
     setCurrentIndex,
     artists,
 }) => {
-    const { currentIndex } = useContext(PlayerContext);
+    const { currentIndex } = useContext(SongPlayerContext);
 
     return (
         <div

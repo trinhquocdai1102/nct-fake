@@ -1,44 +1,43 @@
-import React from 'react';
-import useInnerWidth from '../../hooks/useInnerWidth';
-import { ISong2 } from '../../models';
+import React, { FC } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
-const SongRanking = ({ songs }: { songs: ISong2[] }) => {
-    const { isLaptop, isTablet } = useInnerWidth();
-    const handleClick = (index: number) => {};
+interface SongRankingProps {
+    data: any;
+    index: number;
+    handlePlayAll: Function;
+}
 
+const SongRanking: FC<SongRankingProps> = ({ data, index, handlePlayAll }) => {
     return (
-        <div className='flex flex-col sm:flex-row justify-between'>
-            <div className='line pr-[16px] w-80 md:w-2/6 max-w-[416px]'>
-                <div className='bg-song-ranking-vn w-full h-[160px] bg-center bg-cover bg-no-repeat rounded'></div>
-                <div className='absolute top-[36px] left-[24px] text-[28px] text-white uppercase'>
-                    Việt Nam
+        <div
+            className='mb-4 cursor-pointer'
+            onClick={() => handlePlayAll(index)}
+        >
+            <div className='flex items-center'>
+                <div className='w-10 h-10 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center'>
+                    {index + 1}
                 </div>
-                <div className='flex absolute bottom-[-16px] ml-[64px]'>
-                    {(isLaptop
-                        ? songs.slice(0, 3)
-                        : isTablet
-                        ? songs.slice(0, 2)
-                        : songs.slice(0, 3)
-                    ).map((item, index) => (
-                        <div
-                            key={item.songKey}
-                            className='w-[80px] h-[80px] ml-[-40px] rounded overflow-hidden'
-                        >
-                            <img src={item.thumbnail} alt={item.title} />
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div className='line pr-[16px] w-80 md:w-2/6 max-w-[416px]'>
-                <div className='bg-song-ranking-us w-full h-[160px] bg-center bg-cover bg-no-repeat rounded'></div>
-                <div className='absolute top-[36px] left-[24px] text-[28px] text-white uppercase'>
-                    Âu Mỹ
-                </div>
-            </div>
-            <div className='line pr-[16px] w-80 md:w-2/6 max-w-[416px]'>
-                <div className='bg-song-ranking-kr w-full h-[160px] bg-center bg-cover bg-no-repeat rounded'></div>
-                <div className='absolute top-[36px] left-[24px] text-[28px] text-white uppercase'>
-                    Hàn Quốc
+
+                <div className='ml-4 bg-gray-100 w-full rounded-md p-2 flex flex-1'>
+                    <div className='w-10 h-10 rounded-md overflow-hidden'>
+                        <LazyLoadImage
+                            effect='blur'
+                            width='100%'
+                            height='100%'
+                            src={data?.thumbnail}
+                            alt={data?.title}
+                        />
+                    </div>
+                    <div className='flex-1 ml-3'>
+                        <p className='text-sm font-medium line-clamp-1'>
+                            {data?.title}
+                        </p>
+                        <p className='text-xs text-gray-400 mt-1 line-clamp-1'>
+                            {data?.artists
+                                ?.map((item: any) => item.name)
+                                .join(', ')}
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>

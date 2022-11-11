@@ -1,4 +1,4 @@
-import client from './client';
+import { client } from './client';
 
 export const getArtistDetails = async (key: string) => {
     const data = await client.get('/artist', {

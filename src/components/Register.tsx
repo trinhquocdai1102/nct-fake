@@ -9,6 +9,7 @@ import { TfiClose } from 'react-icons/tfi';
 import { Link } from 'react-router-dom';
 import { auth } from '../config/firebase';
 import { AuthContext } from '../context/AuthContext';
+import Loading from './Common/Loading';
 
 const Register = () => {
     const {
@@ -17,10 +18,11 @@ const Register = () => {
         setOpenFormRegister,
         setOpenFormLogin,
         setLoading,
+        loading,
     } = useContext(AuthContext);
     const [checkboxValue, setCheckboxValue] = useState(false);
     const [registerValue, setRegisterValue] = useState<any>();
-    const formRef = useRef<any>();
+    const formRef = useRef<HTMLDivElement | any>();
 
     const handleCloseFormRegister = () => {
         setOpenFormRegister(false);
@@ -29,6 +31,8 @@ const Register = () => {
             password: '',
             username: '',
             rePassword: '',
+            name: '',
+            id: '',
         });
     };
 
@@ -56,8 +60,9 @@ const Register = () => {
                     registerValue.password
                 );
                 setOpenFormRegister(false);
-                setOpenFormLogin(true);
+                setOpenFormLogin(false);
                 setLoading(false);
+                toast.success('Đăng nhập thành công');
                 toast.success('Đăng ký thành công');
             }
         } catch (err: any) {
@@ -80,6 +85,8 @@ const Register = () => {
                     password: '',
                     username: '',
                     rePassword: '',
+                    name: '',
+                    id: '',
                 });
             }
         };
@@ -104,15 +111,19 @@ const Register = () => {
     useEffect(() => {
         setRegisterValue(registerUser);
     }, [registerUser]);
+
+    if (loading) {
+        return <Loading />;
+    }
     return (
         <div className='fixed flex justify-center items-center top-0 right-0 left-0 bottom-0 w-full bg-[rgba(0,0,0,0.5)] z-[999]'>
             <div
-                className='w-full max-w-[480px] bg-white text-md rounded-md line'
+                className='w-full max-w-[480px] bg-white rounded-md line'
                 ref={formRef}
             >
                 <div className='absolute right-[20px] top-[20px]'>
                     <TfiClose
-                        className='text-[20px] text-main-color cursor-pointer hover:text-black'
+                        className='text-xl text-main-color cursor-pointer hover:text-black'
                         onClick={handleCloseFormRegister}
                     />
                 </div>
@@ -187,10 +198,9 @@ const Register = () => {
                             disabled={
                                 checkboxValue === true &&
                                 registerValue &&
-                                registerValue.password &&
-                                registerValue.email &&
-                                registerValue.password.length > 0 &&
-                                registerValue.email.length > 0
+                                registerValue.password?.length > 0 &&
+                                registerValue.email?.length > 0 &&
+                                registerValue.rePassword?.length
                                     ? false
                                     : true
                             }

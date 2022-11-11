@@ -1,19 +1,24 @@
 import React, { useState, FC } from 'react';
+import { useSelector } from 'react-redux';
 
 export interface User {
     name: string;
+    email: string;
     username: string;
     password: string;
+    id: string;
     memberType: 'normal' | 'admin' | 'V.I.P';
 }
 
 export interface Register {
     email: string;
+    name: string;
     password: string;
     rePassword: string;
+    id: string;
 }
 
-interface PlayerContextState {
+interface AuthContextState {
     currentUser: User[];
     setCurrentUser: Function;
     registerUser: Register[];
@@ -24,9 +29,12 @@ interface PlayerContextState {
     setOpenFormRegister: Function;
     loading: boolean;
     setLoading: Function;
+    logged: any;
+    setLogged: Function;
+    isLogged: any;
 }
 
-export const AuthContext = React.createContext<PlayerContextState>({
+export const AuthContext = React.createContext<AuthContextState>({
     currentUser: [],
     setCurrentUser: () => {},
     registerUser: [],
@@ -37,16 +45,27 @@ export const AuthContext = React.createContext<PlayerContextState>({
     setOpenFormRegister: () => {},
     loading: false,
     setLoading: () => {},
+    logged: {},
+    setLogged: () => {},
+    isLogged: {},
 });
 
-export const AuthProvider: FC<{ children: React.ReactNode }> = ({
+export const AuthContextProvider: FC<{ children: React.ReactNode }> = ({
     children,
 }) => {
+    const [logged, setLogged] = useState<any>();
     const [currentUser, setCurrentUser] = useState<User[]>([]);
     const [registerUser, setRegisterUser] = useState<Register[]>([]);
     const [openFormLogin, setOpenFormLogin] = useState(false);
     const [openFormRegister, setOpenFormRegister] = useState(false);
     const [loading, setLoading] = useState(false);
+    const allUser = useSelector((state: any) => state.auth);
+    const isLogged =
+        allUser &&
+        allUser?.find(
+            (item: any) =>
+                item?.email === logged?.email && item?.email !== undefined
+        );
 
     const AuthContextData = {
         currentUser,
@@ -59,6 +78,9 @@ export const AuthProvider: FC<{ children: React.ReactNode }> = ({
         setOpenFormRegister,
         loading,
         setLoading,
+        logged,
+        setLogged,
+        isLogged,
     };
 
     return (

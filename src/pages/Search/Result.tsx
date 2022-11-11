@@ -26,14 +26,14 @@ const Result = () => {
                 <ResultSkeleton />
             ) : (
                 <>
-                    <h1 className='mb-5 font-semibold text-[20px]'>
+                    <h1 className='mb-5 font-semibold text-xl'>
                         Kết Quả Cho {`"${result}"`}
                     </h1>
                     <div>
                         <div>
                             {data?.recommend?.song?.length > 0 && (
                                 <div className='mb-5'>
-                                    <h1 className='mb-5 font-semibold text-[20px]'>
+                                    <h1 className='mb-5 font-semibold text-xl'>
                                         Top Bài Hát Tìm Kiếm
                                     </h1>
                                     <SongList songs={data?.recommend?.song} />
@@ -41,7 +41,7 @@ const Result = () => {
                             )}
                             {data?.recommend?.video?.length > 0 && (
                                 <div className='mb-5'>
-                                    <h1 className='mb-5 font-semibold text-[20px]'>
+                                    <h1 className='mb-5 font-semibold text-xl'>
                                         Top Bài Hát Tìm Kiếm
                                     </h1>
                                     <SongList songs={data?.recommend?.video} />
@@ -51,7 +51,7 @@ const Result = () => {
                         <div>
                             {data?.search?.song?.song?.length > 0 && (
                                 <div className='mb-5'>
-                                    <h1 className='mb-5 font-semibold text-[20px]'>
+                                    <h1 className='mb-5 font-semibold text-xl'>
                                         Bài Hát
                                     </h1>
                                     <SongList
@@ -61,7 +61,7 @@ const Result = () => {
                             )}
                             {data?.search?.playlist?.playlist?.length > 0 && (
                                 <div className='mb-5'>
-                                    <h1 className='mb-5 font-semibold text-[20px]'>
+                                    <h1 className='mb-5 font-semibold text-xl'>
                                         Playlists
                                     </h1>
                                     <Slider
@@ -74,7 +74,7 @@ const Result = () => {
                             )}
                             {data?.search?.artist?.artist?.length > 0 && (
                                 <div className='mb-5'>
-                                    <h1 className='mb-5 font-semibold text-[20px]'>
+                                    <h1 className='mb-5 font-semibold text-xl'>
                                         Nghệ Sĩ
                                     </h1>
                                     <Slider
@@ -85,7 +85,7 @@ const Result = () => {
                             )}
                             {data?.search?.video?.video?.length > 0 && (
                                 <div className='mb-5'>
-                                    <h1 className='mb-5 font-semibold text-[20px]'>
+                                    <h1 className='mb-5 font-semibold text-xl'>
                                         Video
                                     </h1>
                                     <Slider

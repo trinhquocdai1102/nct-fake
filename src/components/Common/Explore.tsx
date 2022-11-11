@@ -3,7 +3,6 @@ import { FC } from 'react';
 import useSWRInfinite from 'swr/infinite';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Error from './Error';
-// import SkeletonExplore from '../Skeleton/SkeletonExplore';
 import { getExplore } from '../../apis/explore';
 import GridLayout from '../../layout/GridLayout';
 import SkeletonExplore from '../Skeleton/ExploreSkeleton';
@@ -43,6 +42,7 @@ const Explore: FC<ExploreProps> = ({ type, name, radio = '1/1', col }) => {
 
                     <div>
                         <InfiniteScroll
+                            className='scroll-none'
                             dataLength={data?.length || 0}
                             next={() => setSize((size) => size + 1)}
                             hasMore={
@@ -54,7 +54,7 @@ const Explore: FC<ExploreProps> = ({ type, name, radio = '1/1', col }) => {
                             }
                             loader={
                                 <div className='pt-3 flex justify-center'>
-                                    Loading....
+                                    Loading more....
                                 </div>
                             }
                             endMessage={
@@ -74,6 +74,7 @@ const Explore: FC<ExploreProps> = ({ type, name, radio = '1/1', col }) => {
                                             radio={radio}
                                             key={item.key}
                                             item={item}
+                                            type={type}
                                         />
                                     ))}
                             </GridLayout>

@@ -1,48 +1,44 @@
-import React, { useEffect } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
-import Error from './components/Common/Error';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import MainLayout from './layout/MainLayout';
-import PlaylistsDetail from './pages/Detail/PlaylistsDetail';
-import SongDetails from './pages/Detail/SongDetail';
-import Artists from './pages/Explore/Artists';
-import Playlists from './pages/Explore/Playlists';
-import Songs from './pages/Explore/Songs';
-import Videos from './pages/Explore/Videos';
-import Home from './pages/Home';
-import Top100 from './pages/ListenToday/Top100';
-import Topics from './pages/ListenToday/Topics';
-import Search from './pages/Search';
-import Result from './pages/Search/Result';
+import { Audio } from 'react-loader-spinner';
+import RouterManager from './routes';
 
 function App() {
     const location = useLocation();
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location.search, location.pathname]);
 
+    useEffect(() => {
+        setLoading(true);
+        setTimeout(() => {
+            setLoading(false);
+        }, 1000);
+    }, []);
+
     return (
-        <MainLayout>
-            <div>
-                <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/song' element={<Songs />} />
-                    <Route path='/playlist' element={<Playlists />} />
-                    <Route path='/video' element={<Videos />} />
-                    <Route path='/artist' element={<Artists />} />
-                    <Route path='/topics' element={<Topics />} />
-                    <Route path='/top100' element={<Top100 />} />
-                    <Route path='/search' element={<Search />} />
-                    <Route path='/results' element={<Result />} />
-                    <Route
-                        path='/playlist/:key'
-                        element={<PlaylistsDetail />}
+        <>
+            {loading ? (
+                <div className='w-full h-[96vh] m-0 p-0 flex items-center justify-center'>
+                    <Audio
+                        height='40'
+                        width='40'
+                        color='#2DAAED'
+                        ariaLabel='loading'
                     />
-                    <Route path='/song/:key' element={<SongDetails />} />
-                    <Route path='*' element={<Error />} />
-                </Routes>
-            </div>
-        </MainLayout>
+                    ;
+                </div>
+            ) : (
+                <MainLayout>
+                    <div>
+                        <RouterManager />
+                    </div>
+                </MainLayout>
+            )}
+        </>
     );
 }
 

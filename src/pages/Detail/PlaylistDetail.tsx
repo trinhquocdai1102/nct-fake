@@ -5,16 +5,26 @@ import Error from '../../components/Common/Error';
 import DetailSkeleton from '../../components/Skeleton/DetailSkeleton';
 import { getPlaylistDetail } from '../../apis/playlist';
 import SongList from '../../components/Song/SongList';
-import { BsFillPlayCircleFill } from 'react-icons/bs';
+import { FaPlayCircle } from 'react-icons/fa';
+import { useContext } from 'react';
+import { SongPlayerContext } from '../../context/SongPlayerContext';
 
-const PlaylistsDetail = () => {
+const PlaylistDetail = () => {
     const { key } = useParams();
+    const { setSongList, setCurrentIndex } = useContext(SongPlayerContext);
 
     const { data, error } = useSWR(`playlist-${key}`, () => {
         if (key) {
             return getPlaylistDetail(key);
         }
     });
+
+    const handlePlay = () => {
+        if (data && data.playlist) {
+            setCurrentIndex(0);
+            setSongList(data.playlist.songs);
+        }
+    };
 
     if (error) {
         return <Error />;
@@ -34,10 +44,11 @@ const PlaylistsDetail = () => {
                                     src={data?.playlist?.thumbnail}
                                 />
                                 <div
-                                    className='text-white absolute text-[24px] bottom-[12px] right-[12px] p-2 bg-[rgba(0,0,0,0.2)] rounded-full cursor-pointer'
+                                    className='absolute w-[44px] h-[44px] rounded-full bg-main-color flex justify-center items-center bottom-[8px] cursor-pointer right-[8px]'
                                     title='Phát tất cả'
+                                    onClick={handlePlay}
                                 >
-                                    <BsFillPlayCircleFill />
+                                    <FaPlayCircle className='text-white text-[24px]' />
                                 </div>
                             </div>
                         </div>
@@ -48,7 +59,7 @@ const PlaylistsDetail = () => {
                                     <span className='text-zinc-400 text-sm'>
                                         Playlist:{' '}
                                     </span>
-                                    <span className='font-[700]'>
+                                    <span className='font-bold'>
                                         {data?.playlist?.title}
                                     </span>
                                 </div>
@@ -60,7 +71,7 @@ const PlaylistsDetail = () => {
                                             <Link
                                                 to={
                                                     item.shortLink
-                                                        ? `/ARTIST/${item.shortLink}`
+                                                        ? `/artist/${item.shortLink}`
                                                         : '#'
                                                 }
                                                 key={item.artistId}
@@ -135,7 +146,7 @@ const PlaylistsDetail = () => {
                     </div>
 
                     <div className='mt-[44px] mb-5 text-xl'>
-                        <h1 className='first-letter:capitalize text-[22px] font-[700]'>
+                        <h1 className='first-letter:capitalize text-[22px] font-bold'>
                             danh sách bài hát
                         </h1>
 
@@ -147,4 +158,4 @@ const PlaylistsDetail = () => {
     );
 };
 
-export default PlaylistsDetail;
+export default PlaylistDetail;

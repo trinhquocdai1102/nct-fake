@@ -1,4 +1,4 @@
-import client from './client';
+import { client } from './client';
 
 export const getTopKeyword = async () => {
     const res = await client.get('top-keyword');

@@ -1,11 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useContext } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { GrClose } from 'react-icons/gr';
-import { imgNotFound } from '../../utils/constants';
-import { Song } from '../../context/PlayerContext';
+import { imgNotFound } from '../../../utils/constants';
+import { Song } from '../../../context/SongPlayerContext';
 import { Link } from 'react-router-dom';
 import PlayerList from './PlayerList';
-import SongLyrics from './PlayerLyrics';
+import { CommonContext } from '../../../context/CommonContext';
 
 interface PlayerThumbProps {
     thumbnail: string;
@@ -26,21 +26,25 @@ const PlayerThumb: FC<PlayerThumbProps> = ({
     id,
     setCurrentIndexMemo,
 }) => {
+    const { setOpenPlayer } = useContext(CommonContext);
     return (
         <div
             className={`bg-[rgba(28,30,32,0.02)] rounded-md mb-5 relative ${
                 showListSong && 'h-full'
             }`}
         >
-            <div className='w-full flex justify-center md:hidden'>
-                <div className='w-5 h-5 rounded-full bg-red-500 flex items-center justify-center my-1'>
-                    <GrClose className='w-3 h-3 text-white' />
+            <div className='w-full flex justify-end md:hidden'>
+                <div className='w-5 h-5 rounded-full flex items-center justify-center my-1 text-white hover:text-third-color'>
+                    <GrClose
+                        className='w-5 h-5 cursor-pointer'
+                        onClick={() => setOpenPlayer(false)}
+                    />
                 </div>
             </div>
             {showListSong ? (
                 <PlayerList
                     setCurrentIndex={setCurrentIndexMemo}
-                    songIds={songMemo}
+                    songList={songMemo}
                 />
             ) : (
                 <div>
@@ -73,7 +77,6 @@ const PlayerThumb: FC<PlayerThumbProps> = ({
                     </div>
                 </div>
             )}
-            <SongLyrics id={id} />
         </div>
     );
 };

@@ -51,7 +51,7 @@ export const sidebar = [
         child: [
             {
                 name: 'Chủ đề',
-                path: '/topics',
+                path: '/topic',
             },
             {
                 name: 'Tuyển tập',
@@ -65,7 +65,7 @@ export const sidebar = [
     },
     {
         name: 'BXH NCT',
-        path: '/bxh',
+        path: '/ranking',
         icon: HiChartSquareBar,
         child: null,
         background: '#e67e22',

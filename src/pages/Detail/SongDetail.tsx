@@ -1,26 +1,37 @@
 import moment from 'moment';
+import { useContext, useState } from 'react';
+import toast from 'react-hot-toast';
+import { FaPlayCircle } from 'react-icons/fa';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import { getLyric, getSong } from '../../apis/song';
 import Error from '../../components/Common/Error';
-import Loading from '../../components/Common/Loading';
+import Lyrics from '../../components/Lyrics';
 import DetailSkeleton from '../../components/Skeleton/DetailSkeleton';
+import { SongPlayerContext } from '../../context/SongPlayerContext';
+import { avatarDefault } from '../../utils/constants';
 
 const SongDetails = () => {
     const { key } = useParams();
+    const { setSongList, setCurrentIndex } = useContext(SongPlayerContext);
 
     const { data, error } = useSWR(`song-${key}`, () => getSong(String(key)));
     const { data: lyric, error: errorLyric } = useSWR(`lyric-${key}`, () =>
         getLyric(String(key))
     );
 
-    function createMarkup() {
-        return { __html: lyric?.lyric?.lyric };
-    }
+    const handlePlay = () => {
+        if (data) {
+            setCurrentIndex(0);
+            setSongList([data.song]);
+        }
+    };
 
     if (error || errorLyric) {
         return <Error />;
     }
+
     return (
         <>
             {!data || !lyric ? (
@@ -29,11 +40,22 @@ const SongDetails = () => {
                 <div className='px-4'>
                     <div className='flex md:flex-row flex-col'>
                         <div className='flex items-center justify-center md:w-auto w-full'>
-                            <div className='w-[238px] max-w-full aspect-[1/1] bg-gray-400 rounded-md relative'>
-                                <img
-                                    className='rounded-md'
+                            <div className='line w-[238px] max-w-full aspect-[1/1] bg-gray-400 rounded-md relative'>
+                                <LazyLoadImage
                                     src={data?.song?.thumbnail}
+                                    alt={data?.song?.title}
+                                    width='100%'
+                                    height='100%'
+                                    className='rounded-md'
+                                    effect='blur'
                                 />
+                                <div
+                                    className='absolute w-[44px] h-[44px] rounded-full bg-main-color flex justify-center items-center bottom-[8px] cursor-pointer right-[8px]'
+                                    title='Phát'
+                                    onClick={handlePlay}
+                                >
+                                    <FaPlayCircle className='text-white text-[24px]' />
+                                </div>
                             </div>
                         </div>
 
@@ -54,7 +76,7 @@ const SongDetails = () => {
                                         <Link
                                             to={
                                                 item.shortLink
-                                                    ? `/ARTIST/${item.shortLink}`
+                                                    ? `/artist/${item.shortLink}`
                                                     : '#'
                                             }
                                             key={item.artistId}
@@ -80,18 +102,28 @@ const SongDetails = () => {
                             </p>
                         </div>
                     </div>
-
-                    <div className='mt-4 mb-5 font-semibold text-xl leading-loose text-gray-500 bg-[rgba(28,30,32,0.02)] p-4'>
-                        <h1>Lời Bài hát</h1>
-
-                        <div className='font-normal text-sm mt-4 leading-8'>
-                            {lyric?.lyric?.lyric ? (
-                                <div dangerouslySetInnerHTML={createMarkup()} />
-                            ) : (
-                                <p>Không tìm thấy lời bài hát</p>
-                            )}
+                    <div className='w-full bg-bg-color mt-[24px] px-[24px] py-[12px]'>
+                        <div className='flex gap-[8px] items-center'>
+                            <div className='w-[38px] h-[38px] rounded-full truncate text-main-color'>
+                                <img
+                                    src={
+                                        data?.song?.uploadBy?.avatarUrl ||
+                                        avatarDefault
+                                    }
+                                    alt='uploadBy'
+                                />
+                            </div>
+                            <div>
+                                <span className='text-main-color text-13px'>
+                                    Cung cấp bởi:{' '}
+                                </span>
+                                <p className='font-bold uppercase text-second-color'>
+                                    {lyric?.lyric?.userNameUpload}
+                                </p>
+                            </div>
                         </div>
                     </div>
+                    <Lyrics lyric={lyric} />
                 </div>
             )}
         </>

@@ -30,6 +30,7 @@ export interface ISong {
     genreKey: string;
     streamUrls: any[];
     description?: any;
+    user?: any;
 }
 
 export interface INewRelease {
@@ -124,7 +125,7 @@ export interface ITop100 {
     refMapping: any[];
     genreKey: string;
     songs?: any;
-    videos?: any;
+    videoList?: any;
     description: string;
     dateModify: string;
     listTag: any[];
@@ -161,7 +162,7 @@ export interface IListPlaylist {
     refMapping: any[];
     genreKey: string;
     songs?: any;
-    videos?: any;
+    videoList?: any;
     description: string;
     dateModify: string;
     listTag: any[];

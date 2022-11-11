@@ -1,35 +1,67 @@
 import { onAuthStateChanged, signOut } from 'firebase/auth';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect, useRef } from 'react';
 import toast from 'react-hot-toast';
-import { AiOutlineSetting } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
+import { AiOutlineSetting, AiOutlineLogin } from 'react-icons/ai';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import { sidebar } from '.';
 import { auth } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
-import Loading from '../Common/Loading';
-import Modal from '../Common/Modal';
+import { addUser } from '../../store/authSlice';
+import { avatarDefault } from '../../utils/constants';
 import Logo from './Logo';
 import SidebarItem from './SidebarItem';
 
 const Sidebar = () => {
-    const { setOpenFormLogin, setOpenFormRegister, loading, setLoading } =
-        useContext(AuthContext);
-    const [isLogged, setIsLogged] = useState<any>();
-    const [openModal, setOpenModal] = useState(false);
-
-    const modalContent = { content: 'Bạn có chắc chắn muốn đăng xuất ?' };
+    const {
+        setOpenFormLogin,
+        setOpenFormRegister,
+        loading,
+        setLoading,
+        setCurrentUser,
+        logged,
+        setLogged,
+        isLogged,
+    } = useContext(AuthContext);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [openSetting, setOpenSetting] = useState(false);
+    const settingRef = useRef<HTMLDivElement | any>();
 
     const handleLogout = async () => {
-        await signOut(auth);
-        toast.success('Tài khoản đã được đăng xuất !');
+        if (window.confirm('Bạn có chắc chắn muốn đăng xuất ?')) {
+            await signOut(auth);
+            setCurrentUser([]);
+            navigate('/');
+            toast.success('Tài khoản đã được đăng xuất !');
+        }
     };
 
     useEffect(() => {
-        setLoading(true);
-        onAuthStateChanged(auth, (currentUser) => {
-            setIsLogged(currentUser);
-            setOpenModal(false);
+        const handler = (e: { target: any }) => {
+            if (!settingRef?.current?.contains(e.target)) {
+                setOpenSetting(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => {
+            document.removeEventListener('mousedown', handler);
+        };
+    });
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (curr: any) => {
+            setLogged(curr);
             setLoading(false);
+
+            dispatch(
+                addUser({
+                    email: curr?.email,
+                    name: 'user.music' + '.' + curr?.metadata?.createdAt,
+                    id: curr?.metadata?.createdAt,
+                })
+            );
+            setCurrentUser({ email: curr?.email });
         });
     }, []);
 
@@ -51,24 +83,50 @@ const Sidebar = () => {
             </div>
             <div className='flex items-center justify-between mt-4 py-4 bg-slate-100 text-slate-600'>
                 {loading ? (
-                    <Loading />
+                    <div>Loading...</div>
                 ) : (
-                    <div className='ml-4 text-sm'>
-                        {isLogged ? (
+                    <div className='ml-4 text-sm w-full'>
+                        {isLogged && isLogged !== undefined && logged ? (
                             <div className='flex flex-col items-start'>
-                                <span>{isLogged?.email}</span>
-                                <button
-                                    className='text-[15px] font-bold'
-                                    onClick={() => setOpenModal(true)}
-                                >
-                                    Đăng xuất
-                                </button>
-                                <Modal
-                                    content={modalContent.content}
-                                    handleClick={handleLogout}
-                                    openModal={openModal}
-                                    setOpenModal={setOpenModal}
-                                />
+                                <div className='flex items-center justify-between w-full'>
+                                    <Link
+                                        to={`/user/profile/${isLogged?.name}`}
+                                        className='flex items-center '
+                                    >
+                                        <div className='w-[24px] h-auto rounded-full overflow-hidden mr-1'>
+                                            <img
+                                                src={
+                                                    isLogged?.avatar ??
+                                                    avatarDefault
+                                                }
+                                                alt='user-avatar'
+                                            />
+                                        </div>
+                                        <p className='truncate max-w-[120px]'>
+                                            {isLogged?.name}
+                                        </p>
+                                    </Link>
+                                    <div
+                                        className='line'
+                                        onClick={() => setOpenSetting(true)}
+                                    >
+                                        <AiOutlineSetting className='text-xl mr-4 cursor-pointer' />
+                                        <div
+                                            className={`${
+                                                openSetting ? 'block' : 'hidden'
+                                            } absolute shadow-main bg-white p-2`}
+                                            ref={settingRef}
+                                        >
+                                            <div
+                                                className='text-[15px] w-[120px] flex items-center cursor-pointer'
+                                                onClick={handleLogout}
+                                            >
+                                                <AiOutlineLogin className='mr-2' />
+                                                <span>Đăng xuất</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         ) : (
                             <>
@@ -95,6 +153,16 @@ const Sidebar = () => {
                     <SidebarItem key={item.name} item={item} />
                 ))}
             </ul>
+            {isLogged && isLogged !== undefined && logged && (
+                <div className='mt-4 text-sm pl-4'>
+                    <h1 className='my-4 uppercase font-bold'>Thư viện</h1>
+                    <div className='text-13px'>
+                        <Link to={`/favorite/${isLogged?.name}`}>
+                            NhacCuaTui
+                        </Link>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

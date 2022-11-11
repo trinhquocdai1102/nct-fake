@@ -24,6 +24,16 @@ const SongListSkeleton = () => {
                 <SongItemSkeleton />
                 <SongItemSkeleton />
                 <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
+                <SongItemSkeleton />
             </div>
         </div>
     );

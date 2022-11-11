@@ -10,11 +10,11 @@ import {
 import { BiDotsVerticalRounded } from 'react-icons/bi';
 import { FaRandom } from 'react-icons/fa';
 import { TfiLoop } from 'react-icons/tfi';
-import { formatTime } from '../../utils/constants';
+import { formatTime } from '../../../utils/constants';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { FiVolume1, FiVolume2, FiVolumeX } from 'react-icons/fi';
-import Loading from '../Common/Loading';
+import Loading from '../../Common/Loading';
 
 interface PlayLoop {
     loop: string;
@@ -27,10 +27,12 @@ interface PlayerControllerProps {
     volume: number;
     handleVolumeChange: (e: any) => void;
     currentTime: number;
-    progressRef: any;
+    progressRef: HTMLDivElement | any;
     audioRef: any;
     handleSeekTime: (e: any) => void;
     duration: number;
+    optionRef: any;
+    moreOption: boolean;
     handlePrevSong: () => void;
     handlePlayPause: () => void;
     playing: boolean;
@@ -42,6 +44,7 @@ interface PlayerControllerProps {
     handlePlayRandom: () => void;
     handlePlayLoop: () => void;
     handleAddToFavorite: () => void;
+    handleOpenMoreOption: () => void;
 }
 
 const PlayerController: FC<PlayerControllerProps> = ({
@@ -58,6 +61,8 @@ const PlayerController: FC<PlayerControllerProps> = ({
     handleSeekTime,
     playing,
     duration,
+    optionRef,
+    moreOption,
     setVolume,
     loading,
     playRandom,
@@ -65,36 +70,15 @@ const PlayerController: FC<PlayerControllerProps> = ({
     handlePlayRandom,
     handlePlayLoop,
     handleAddToFavorite,
+    handleOpenMoreOption,
 }) => {
-    const [moreOption, setMoreOption] = useState(false);
     const volumeRef = useRef(0);
-    const optionRef = useRef<any>();
 
     const handleCopy = (e: any) => {
         const href = e.target.href;
         navigator.clipboard.writeText(href);
         toast.success('Đã sao chép thành công');
     };
-
-    const handleOpenMoreOption = () => {
-        if (!moreOption) {
-            setMoreOption(true);
-        } else if (moreOption) {
-            setMoreOption(false);
-        }
-    };
-
-    useEffect(() => {
-        const handler = (e: { target: any }) => {
-            if (!optionRef.current.contains(e.target)) {
-                setMoreOption(false);
-            }
-        };
-        document.addEventListener('mousedown', handler);
-        return () => {
-            document.removeEventListener('mousedown', handler);
-        };
-    });
 
     return (
         <div className='pb-5'>
@@ -207,7 +191,6 @@ const PlayerController: FC<PlayerControllerProps> = ({
                     </div>
                     <p style={{ userSelect: 'none' }}>{formatTime(duration)}</p>
                 </div>
-
                 <div className='flex items-center justify-between mt-5 text-[rgba(28,30,32,0.5)]'>
                     <div
                         className={`flex items-center cursor-pointer text-[15px] ${
@@ -256,7 +239,7 @@ const PlayerController: FC<PlayerControllerProps> = ({
                         />
                     </div>
                     <div
-                        className={`flex line items-center cursor-pointer text-[16px] text-${playLoop.color}`}
+                        className={`flex line items-center cursor-pointer text-base text-${playLoop.color}`}
                         title='Lặp lại'
                         onClick={handlePlayLoop}
                     >

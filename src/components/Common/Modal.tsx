@@ -14,7 +14,7 @@ const Modal: FC<ModalProps> = ({
     openModal,
     setOpenModal,
 }) => {
-    const modalRef = useRef<any>();
+    const modalRef = useRef<HTMLDivElement | any>();
 
     useEffect(() => {
         const handler = (e: { target: any }) => {
@@ -32,10 +32,10 @@ const Modal: FC<ModalProps> = ({
         <div
             className={`${
                 openModal ? 'flex' : 'hidden'
-            } fixed top-0 left-0 right-0 bottom-0 justify-center items-center bg-main-color `}
+            } fixed top-0 left-0 right-0 bottom-0 justify-center xl:justify-start xl:pl-[30%] items-center bg-main-color`}
         >
             <div
-                className='line bg-white w-full max-w-[400px] text-center'
+                className='line bg-white w-full max-w-[400px] text-center rounded-md p-2 md:mt-[-20%]'
                 ref={modalRef}
             >
                 <div>
@@ -44,7 +44,7 @@ const Modal: FC<ModalProps> = ({
                         onClick={() => setOpenModal(false)}
                     />
                 </div>
-                <div className='border-b p-4 text-[16px]'>{content}</div>
+                <div className='border-b p-4 text-base'>{content}</div>
                 <div className='flex justify-around items-center p-6'>
                     <button
                         onClick={handleClick}

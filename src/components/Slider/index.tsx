@@ -7,6 +7,7 @@ import 'swiper/css/pagination';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import Item from './Item';
 import useInnerWidth from '../../hooks/useInnerWidth';
+import Video from './Video';
 
 interface BannerProps {
     banners: any[];
@@ -14,6 +15,7 @@ interface BannerProps {
     autoPlay?: boolean;
     type?: string;
     radio?: string;
+    video?: boolean;
 }
 
 const Slider: FC<BannerProps> = ({
@@ -22,6 +24,7 @@ const Slider: FC<BannerProps> = ({
     autoPlay = false,
     type,
     radio = '1/1',
+    video,
 }) => {
     const { isPC, isTablet } = useInnerWidth();
 
@@ -43,11 +46,15 @@ const Slider: FC<BannerProps> = ({
             spaceBetween={spacer}
             slidesPerView={views}
         >
-            {banners?.map((item) => (
-                <SwiperSlide key={item.key}>
-                    <Item radio={radio} item={item} type={type} />
-                </SwiperSlide>
-            ))}
+            {video ? (
+                <Video data={banners} />
+            ) : (
+                banners?.map((item) => (
+                    <SwiperSlide key={item.key}>
+                        <Item radio={radio} item={item} type={type} />
+                    </SwiperSlide>
+                ))
+            )}
         </Swiper>
     );
 };

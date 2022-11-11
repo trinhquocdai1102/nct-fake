@@ -2,27 +2,36 @@ import { BrowserRouter } from 'react-router-dom';
 import ReactDOM from 'react-dom/client';
 import './index.scss';
 import App from './App';
-import { Provider } from 'react-redux';
+import { Provider as StoreProvider } from 'react-redux';
 import { SWRConfig } from 'swr';
 import { Toaster } from 'react-hot-toast';
-import PlayerContextProvider from './context/PlayerContext';
+import SongPlayerContextProvider from './context/SongPlayerContext';
 import store from './store';
-import { AuthProvider } from './context/AuthContext';
+import { AuthContextProvider } from './context/AuthContext';
+import { VideoPlayerContextProvider } from './context/VideoPlayerContext';
+import { CommonContextProvider } from './context/CommonContext';
+import { ProfileContextProvider } from './context/ProfileContext';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
-    <AuthProvider>
-        <BrowserRouter>
-            <PlayerContextProvider>
-                <SWRConfig value={{ revalidateOnFocus: false }}>
-                    <Provider store={store}>
-                        <App />
-                        <Toaster reverseOrder={false} />
-                    </Provider>
-                </SWRConfig>
-            </PlayerContextProvider>
-        </BrowserRouter>
-    </AuthProvider>
+    <BrowserRouter>
+        <StoreProvider store={store}>
+            <AuthContextProvider>
+                <VideoPlayerContextProvider>
+                    <SongPlayerContextProvider>
+                        <CommonContextProvider>
+                            <ProfileContextProvider>
+                                <SWRConfig value={{ revalidateOnFocus: false }}>
+                                    <App />
+                                    <Toaster reverseOrder={false} />
+                                </SWRConfig>
+                            </ProfileContextProvider>
+                        </CommonContextProvider>
+                    </SongPlayerContextProvider>
+                </VideoPlayerContextProvider>
+            </AuthContextProvider>
+        </StoreProvider>
+    </BrowserRouter>
 );

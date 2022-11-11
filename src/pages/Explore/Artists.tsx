@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 import useSWR from 'swr';
 import { getExploreArtists } from '../../apis/explore';
 import Error from '../../components/Common/Error';
-import SkeletonExplore from '../../components/Skeleton/ExploreSkeleton';
+import ExploreSkeleton from '../../components/Skeleton/ExploreSkeleton';
 import GridLayout from '../../layout/GridLayout';
-// import SkeletonExplore from '../../components/Skeleton/SkeletonExplore';
 
 const Artists = () => {
     const [gender, setGender] = useState(0);
@@ -22,7 +21,7 @@ const Artists = () => {
     return (
         <div className='px-4'>
             {!data ? (
-                <SkeletonExplore radio='1/1' col={4} />
+                <ExploreSkeleton radio='1/1' col={4} />
             ) : (
                 <div>
                     <h1 className='mb-5 font-semibold'>Nghệ Sĩ</h1>
@@ -57,7 +56,7 @@ const Artists = () => {
                         {data?.artist?.map((item: any) => (
                             <Link
                                 key={item.artistId}
-                                to={`/ARTIST/${item.shortLink}`}
+                                to={`/artist/${item.shortLink}`}
                                 className='hover:text-second-color'
                             >
                                 <div className='rounded-md overflow-hidden w-full aspect-[1/1]'>
