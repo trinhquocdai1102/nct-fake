@@ -29,6 +29,7 @@ const VideoList: FC<VideoListProps> = ({ videos }) => {
     const handleClick = (video: any) => {
         setVideoList(video);
         setVideoPlaying(true);
+        videoRef?.current?.play();
     };
 
     useEffect(() => {

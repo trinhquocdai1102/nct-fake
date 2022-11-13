@@ -15,13 +15,15 @@ interface ItemType {
 const Item = ({ item, type, radio = '1/1' }: ItemType) => {
     const { audioRef, setSongList, setCurrentIndex } =
         useContext(SongPlayerContext);
-    const { setVideoList, setVideoPlaying } = useContext(VideoPlayerContext);
+    const { videoRef, setVideoList, setVideoPlaying } =
+        useContext(VideoPlayerContext);
 
     const handlePlaySong = () => {
         if (type !== 'song' && type !== 'mv') {
             return;
         } else if (type === 'mv') {
             audioRef?.current?.pause();
+            videoRef?.current?.play();
             setVideoPlaying(true);
             setVideoList(item);
             return;
@@ -34,6 +36,7 @@ const Item = ({ item, type, radio = '1/1' }: ItemType) => {
         if (type === 'mv') {
             setVideoList(item);
             setVideoPlaying(true);
+            videoRef?.current?.play();
         }
     };
 

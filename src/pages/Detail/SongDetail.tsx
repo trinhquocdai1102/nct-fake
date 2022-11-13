@@ -1,6 +1,5 @@
 import moment from 'moment';
-import { useContext, useState } from 'react';
-import toast from 'react-hot-toast';
+import { useContext } from 'react';
 import { FaPlayCircle } from 'react-icons/fa';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link, useParams } from 'react-router-dom';

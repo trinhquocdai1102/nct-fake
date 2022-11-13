@@ -2,7 +2,6 @@ import React, { FC, useRef } from 'react';
 import { BsSkipForwardFill } from 'react-icons/bs';
 import { FiVolume1, FiVolume2, FiVolumeX } from 'react-icons/fi';
 import { IoPause, IoPlay } from 'react-icons/io5';
-import { MdOutlineOpenInFull } from 'react-icons/md';
 import { formatTime } from '../../../utils/constants';
 
 interface VideoControllerProps {
@@ -109,17 +108,6 @@ const VideoController: FC<VideoControllerProps> = ({
                         <p style={{ userSelect: 'none' }}>
                             {formatTime(duration)}
                         </p>
-                    </div>
-                </div>
-                <div
-                    className='line cursor-pointer'
-                    onClick={() => {
-                        videoRef.current.requestFullscreen();
-                    }}
-                >
-                    <MdOutlineOpenInFull className='text-xl' />
-                    <div className=' flex items-center justify-center absolute top-0 left-0 right-0 bottom-0 w-full'>
-                        <div className='w-[2px] h-[2px] bg-[transparent]'></div>
                     </div>
                 </div>
             </div>
