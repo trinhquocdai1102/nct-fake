@@ -6,6 +6,7 @@ import { getExploreArtists } from '../../apis/explore';
 import Error from '../../components/Common/Error';
 import ExploreSkeleton from '../../components/Skeleton/ExploreSkeleton';
 import GridLayout from '../../layout/GridLayout';
+import { imgNotFound } from '../../utils/constants';
 
 const Artists = () => {
     const [gender, setGender] = useState(0);
@@ -61,7 +62,11 @@ const Artists = () => {
                             >
                                 <div className='rounded-md overflow-hidden w-full aspect-[1/1]'>
                                     <LazyLoadImage
-                                        src={item.imageUrl}
+                                        onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null;
+                                            currentTarget.src = imgNotFound;
+                                        }}
+                                        src={item.imageUrl ?? imgNotFound}
                                         alt={item.name}
                                         width='100%'
                                         height='100%'

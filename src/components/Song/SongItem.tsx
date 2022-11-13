@@ -29,7 +29,11 @@ const SongItem: FC<SongItemProps> = ({
                 >
                     <div className='w-[54px] h-[54px]'>
                         <LazyLoadImage
-                            src={item?.thumbnail || imgNotFound}
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null;
+                                currentTarget.src = imgNotFound;
+                            }}
+                            src={item?.thumbnail ?? imgNotFound}
                             alt={item?.title}
                             width='100%'
                             height='100%'
@@ -57,7 +61,11 @@ const SongItem: FC<SongItemProps> = ({
                         <div className='flex gap-[8px] truncate'>
                             <div className='w-[20px] h-[20px]'>
                                 <LazyLoadImage
-                                    src={item?.thumbnail || imgNotFound}
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = imgNotFound;
+                                    }}
+                                    src={item?.thumbnail ?? imgNotFound}
                                     alt={item?.title}
                                     width='100%'
                                     height='100%'

@@ -12,15 +12,21 @@ import VideoController from './VideoController';
 
 interface VideoPlayerProps {
     data: string;
+    thumbnail: string;
 }
 
-const VideoPlayer: FC<VideoPlayerProps> = ({ data }) => {
-    const { videoPlaying, setVideoPlaying, videoRef } =
-        useContext(VideoPlayerContext);
+const VideoPlayer: FC<VideoPlayerProps> = ({ data, thumbnail }) => {
+    const {
+        videoPlaying,
+        setVideoPlaying,
+        videoRef,
+        currentTime,
+        setCurrentTime,
+        duration,
+        setDuration,
+    } = useContext(VideoPlayerContext);
 
     const progressRef = useRef<HTMLDivElement | any>();
-    const [currentTime, setCurrentTime] = useState<number>(0);
-    const [duration, setDuration] = useState<number>(0);
     const [volume, setVolume] = useState(
         Number(
             JSON.parse(localStorage.getItem('nct-current-video-volume') as any)
@@ -29,10 +35,10 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ data }) => {
 
     const handlePlayPause = useCallback(() => {
         if (videoPlaying) {
-            videoRef.current.pause();
+            videoRef?.current?.pause();
             setVideoPlaying(false);
         } else {
-            videoRef.current.play();
+            videoRef?.current?.play();
             setVideoPlaying(true);
         }
     }, [videoPlaying]);
@@ -102,14 +108,23 @@ const VideoPlayer: FC<VideoPlayerProps> = ({ data }) => {
             ) : (
                 <div className='line'>
                     <video
+                        id='my-player'
                         className='w-full h-full rounded-sm'
-                        src={data}
-                        preload='metadata'
-                        ref={videoRef}
                         controls={false}
+                        ref={videoRef}
+                        preload='auto'
+                        poster={thumbnail || ''}
+                        data-setup='{}'
+                        autoPlay
                         onClick={handlePlayPause}
                         onTimeUpdate={handleVideoUpdate}
-                    />
+                    >
+                        <source src={data} type='video/mp4'></source>
+                        <p className='vjs-no-js'>
+                            To view this video please enable JavaScript, and
+                            consider upgrading to a web browser that
+                        </p>
+                    </video>
                     <VideoController
                         progressRef={progressRef}
                         handleSeekTime={handleSeekTime}

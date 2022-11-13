@@ -15,13 +15,14 @@ interface ItemType {
 const Item = ({ item, type, radio = '1/1' }: ItemType) => {
     const { audioRef, setSongList, setCurrentIndex } =
         useContext(SongPlayerContext);
-    const { setVideoList } = useContext(VideoPlayerContext);
+    const { setVideoList, setVideoPlaying } = useContext(VideoPlayerContext);
 
     const handlePlaySong = () => {
         if (type !== 'song' && type !== 'mv') {
             return;
         } else if (type === 'mv') {
-            audioRef.current.pause();
+            audioRef?.current?.pause();
+            setVideoPlaying(true);
             setVideoList(item);
             return;
         }
@@ -32,6 +33,7 @@ const Item = ({ item, type, radio = '1/1' }: ItemType) => {
     const handleClick = () => {
         if (type === 'mv') {
             setVideoList(item);
+            setVideoPlaying(true);
         }
     };
 
@@ -51,10 +53,14 @@ const Item = ({ item, type, radio = '1/1' }: ItemType) => {
             >
                 <div className='hover:scale-[1.1] ease-in duration-[400ms]'>
                     <LazyLoadImage
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null;
+                            currentTarget.src = imgNotFound;
+                        }}
                         src={
-                            item.imageUrl ||
-                            item.thumbnail ||
-                            item.thumbURL ||
+                            (item.imageUrl ||
+                                item.thumbnail ||
+                                item.thumbURL) ??
                             imgNotFound
                         }
                         alt={item.title}

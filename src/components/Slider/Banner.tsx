@@ -7,6 +7,7 @@ import 'swiper/css/pagination';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from 'react-router-dom';
+import { imgNotFound } from '../../utils/constants';
 
 interface BannerProps {
     banners: any[];
@@ -32,11 +33,16 @@ const Banner: FC<BannerProps> = ({ banners }) => {
                     >
                         <LazyLoadImage
                             className='rounded-md'
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null;
+                                currentTarget.src = imgNotFound;
+                            }}
                             src={
-                                item.coverImageURL ||
-                                item.imageUrl ||
-                                item.thumbnail ||
-                                item.thumbURL
+                                (item.coverImageURL ||
+                                    item.imageUrl ||
+                                    item.thumbnail ||
+                                    item.thumbURL) ??
+                                imgNotFound
                             }
                             alt={item.title}
                             effect={'blur'}

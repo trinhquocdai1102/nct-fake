@@ -29,7 +29,6 @@ const ProfileDetail = () => {
 
         if (id) {
             await updateDoc(docRef, { ...profile });
-            console.log('aaa');
         }
     };
 
@@ -59,7 +58,10 @@ const ProfileDetail = () => {
     }, [profileCollection]);
 
     useEffect(() => {
-        if (location.pathname.includes('/user/profile/')) {
+        if (
+            location.pathname.includes('/user/profile/') &&
+            location.key !== 'default'
+        ) {
             setOpenChangeProfile(false);
         }
     }, [location]);

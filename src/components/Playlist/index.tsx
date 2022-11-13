@@ -31,7 +31,11 @@ const Playlist: FC<PlaylistProps> = ({ data, custom }) => {
                         >
                             <div className='hover:scale-[1.1] ease-in duration-[400ms] cursor-pointer'>
                                 <LazyLoadImage
-                                    src={item.thumbnail || imgNotFound}
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = imgNotFound;
+                                    }}
+                                    src={item.thumbnail ?? imgNotFound}
                                     alt={item.title}
                                     width='100%'
                                     height='100%'

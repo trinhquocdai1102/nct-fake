@@ -31,7 +31,7 @@ const SongPlayer = () => {
     } = useContext(SongPlayerContext);
     const { setOpenFormLogin, isLogged } = useContext(AuthContext);
 
-    const { videoPlaying } = useContext(VideoPlayerContext);
+    const { videoMode } = useContext(VideoPlayerContext);
     const songKey = songList && songList[currentIndex]?.key;
     const { data } = useSWR(
         `player-${songKey}`,
@@ -106,10 +106,10 @@ const SongPlayer = () => {
             }
         } else if (playLoop.loop === '1') {
             setAudioPlaying(true);
-            audioRef.current.play();
+            audioRef?.current?.play();
             setCurrentTime(0);
         } else {
-            audioRef.current.pause();
+            audioRef?.current?.pause();
             setAudioPlaying(false);
         }
     };
@@ -221,12 +221,12 @@ const SongPlayer = () => {
             !audioRef.current ||
             !songList ||
             !data?.song?.streamUrls ||
-            videoPlaying === true
+            videoMode
         )
             return;
         audioRef.current.src = data?.song?.streamUrls[0]?.streamUrl;
         audioRef.current.play();
-    }, [songList, data, songKey]);
+    }, [songList, data, songKey, videoMode]);
 
     useEffect(() => {
         if (data?.song?.streamUrls?.length === 0) {
@@ -255,10 +255,10 @@ const SongPlayer = () => {
     }, [data]);
 
     useEffect(() => {
-        if (videoPlaying) {
+        if (videoMode) {
             audioRef?.current?.pause();
         }
-    }, [videoPlaying]);
+    }, [videoMode]);
 
     useEffect(() => {
         localStorage.setItem('nct-current-list-song', JSON.stringify(songList));

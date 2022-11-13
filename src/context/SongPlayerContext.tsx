@@ -55,10 +55,10 @@ const SongPlayerContextProvider: FC<{ children: React.ReactNode }> = ({
 
     const handlePlayPause = useCallback(() => {
         if (audioPlaying) {
-            audioRef.current.pause();
+            audioRef?.current?.pause();
             setAudioPlaying(false);
         } else {
-            audioRef.current.play();
+            audioRef?.current?.play();
             setAudioPlaying(true);
         }
     }, [audioPlaying]);

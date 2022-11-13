@@ -13,7 +13,7 @@ const ArtistDetail = () => {
     const { key } = useParams();
     const [segmentedValue, setSegmentedValue] = useState({
         name: 'Trang chủ',
-        item: '',
+        item: 'full',
     });
 
     const { data, error } = useSWR(`playlist-${key}`, () => {
@@ -42,7 +42,11 @@ const ArtistDetail = () => {
                 <div className='px-[40px]'>
                     <div>
                         <img
-                            src={data?.artist?.coverImageURL || avatarDefault}
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null;
+                                currentTarget.src = avatarDefault;
+                            }}
+                            src={data?.artist?.coverImageURL ?? avatarDefault}
                             alt={data?.artist?.name}
                         />
                     </div>

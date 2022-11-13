@@ -29,7 +29,11 @@ const SongItem: FC<ListSongItemProps> = ({
         >
             <div className='w-10 h-10 rounded-md overflow-hidden'>
                 <LazyLoadImage
-                    src={thumbnail || imgNotFound}
+                    onError={({ currentTarget }) => {
+                        currentTarget.onerror = null;
+                        currentTarget.src = imgNotFound;
+                    }}
+                    src={thumbnail ?? imgNotFound}
                     alt={title}
                     effect='blur'
                 />

@@ -6,6 +6,7 @@ import Error from '../../components/Common/Error';
 import Lyrics from '../../components/Lyrics';
 import VideoPlayer from '../../components/Player/Video';
 import VideoPlaySkeleton from '../../components/Skeleton/VideoPlaySkeleton';
+import { avatarDefault } from '../../utils/constants';
 
 const VideoDetail = () => {
     const { key } = useParams();
@@ -30,6 +31,7 @@ const VideoDetail = () => {
                         {data?.video?.streamUrls && (
                             <VideoPlayer
                                 data={data?.video?.streamUrls[0]?.streamUrl}
+                                thumbnail={data?.video?.thumbnail}
                             />
                         )}
                     </div>
@@ -51,7 +53,11 @@ const VideoDetail = () => {
                                 <div className='rounded-full w-10 h-10 overflow-hidden border'>
                                     <img
                                         className='rounded-full'
-                                        src={item?.imageUrl}
+                                        onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null;
+                                            currentTarget.src = avatarDefault;
+                                        }}
+                                        src={item?.imageUrl ?? avatarDefault}
                                     />
                                 </div>
                             </Link>

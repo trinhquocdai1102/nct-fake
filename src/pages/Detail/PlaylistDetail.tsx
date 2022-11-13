@@ -8,6 +8,7 @@ import SongList from '../../components/Song/SongList';
 import { FaPlayCircle } from 'react-icons/fa';
 import { useContext } from 'react';
 import { SongPlayerContext } from '../../context/SongPlayerContext';
+import { avatarDefault } from '../../utils/constants';
 
 const PlaylistDetail = () => {
     const { key } = useParams();
@@ -41,7 +42,14 @@ const PlaylistDetail = () => {
                             <div className='line w-[238px] max-w-full aspect-[1/1] bg-gray-400 rounded-md'>
                                 <img
                                     className='rounded-md'
-                                    src={data?.playlist?.thumbnail}
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = avatarDefault;
+                                    }}
+                                    src={
+                                        data?.playlist?.thumbnail ??
+                                        avatarDefault
+                                    }
                                 />
                                 <div
                                     className='absolute w-[44px] h-[44px] rounded-full bg-main-color flex justify-center items-center bottom-[8px] cursor-pointer right-[8px]'
@@ -79,7 +87,18 @@ const PlaylistDetail = () => {
                                             >
                                                 <img
                                                     className='rounded-full'
-                                                    src={item.imageUrl}
+                                                    onError={({
+                                                        currentTarget,
+                                                    }) => {
+                                                        currentTarget.onerror =
+                                                            null;
+                                                        currentTarget.src =
+                                                            avatarDefault;
+                                                    }}
+                                                    src={
+                                                        item.imageUrl ??
+                                                        avatarDefault
+                                                    }
                                                 />
                                             </Link>
                                         )
@@ -130,7 +149,14 @@ const PlaylistDetail = () => {
                         <div className='flex gap-[8px] items-center'>
                             <div className='w-[38px] h-[38px] rounded-full truncate text-main-color'>
                                 <img
-                                    src={data.playlist.uploadBy.avatarUrl}
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = avatarDefault;
+                                    }}
+                                    src={
+                                        data.playlist.uploadBy.avatarUrl ??
+                                        avatarDefault
+                                    }
                                     alt=''
                                 />
                             </div>

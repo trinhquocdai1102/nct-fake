@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { avatarDefault } from '../../utils/constants';
 
 interface SongRankingBannerProps {
     data: any;
@@ -17,7 +18,14 @@ const SongRankingBanner: React.FC<SongRankingBannerProps> = ({
         >
             <div className='relative'>
                 <div className='w-[160px] h-[160px] rounded-md overflow-hidden'>
-                    <img src={data?.thumbnail} alt={data?.title} />
+                    <img
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null;
+                            currentTarget.src = avatarDefault;
+                        }}
+                        src={data?.thumbnail ?? avatarDefault}
+                        alt={data?.title}
+                    />
                 </div>
                 <div className='absolute top-[-5px] left-[-5px] bg-red-500 rounded-sm px-2 py-1 text-white text-sm'>
                     Top 1
@@ -44,7 +52,13 @@ const SongRankingBanner: React.FC<SongRankingBannerProps> = ({
                                     key={item.shortLink}
                                     className='w-5 h-5 rounded-full overflow-hidden block'
                                 >
-                                    <img src={item?.imageUrl} />
+                                    <img
+                                        onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null;
+                                            currentTarget.src = avatarDefault;
+                                        }}
+                                        src={item?.imageUrl ?? avatarDefault}
+                                    />
                                 </Link>
                             ))}
                         </div>

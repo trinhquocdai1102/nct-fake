@@ -2,6 +2,7 @@ import React, { FC, Fragment } from 'react';
 import { AiFillPlayCircle } from 'react-icons/ai';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from 'react-router-dom';
+import { imgNotFound } from '../../utils/constants';
 
 interface VideoSliderProps {
     data: any;
@@ -26,7 +27,11 @@ const Video: FC<VideoSliderProps> = ({ data }) => {
                                 <div className='line overflow-hidden w-full'>
                                     <div className='hover:scale-[1.1] ease-in duration-[400ms]'>
                                         <LazyLoadImage
-                                            src={item.thumbnail}
+                                            onError={({ currentTarget }) => {
+                                                currentTarget.onerror = null;
+                                                currentTarget.src = imgNotFound;
+                                            }}
+                                            src={item.thumbnail ?? imgNotFound}
                                             alt={item.title}
                                         />
                                         <div className='absolute top-0 left-0 bottom-0 right-0 flex items-center justify-center text-[40px] text-white hidden'>

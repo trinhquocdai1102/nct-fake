@@ -22,6 +22,12 @@ interface VideoPlayerContextState {
     setVideoMode: Function;
     allVideo: Video[];
     setAllVideo: Function;
+    autoPlayVideo: boolean;
+    setAutoPlayVideo: Function;
+    currentTime: number;
+    setCurrentTime: Function;
+    duration: number;
+    setDuration: Function;
 }
 
 export const VideoPlayerContext = createContext<VideoPlayerContextState>({
@@ -36,6 +42,12 @@ export const VideoPlayerContext = createContext<VideoPlayerContextState>({
     setVideoMode: () => {},
     allVideo: [],
     setAllVideo: () => {},
+    autoPlayVideo: true,
+    setAutoPlayVideo: () => {},
+    currentTime: 0,
+    setCurrentTime: () => {},
+    duration: 0,
+    setDuration: () => {},
 });
 
 export const VideoPlayerContextProvider: FC<{ children: React.ReactNode }> = ({
@@ -54,15 +66,17 @@ export const VideoPlayerContextProvider: FC<{ children: React.ReactNode }> = ({
         { revalidateFirstPage: false }
     );
     const videoRef = useRef<HTMLVideoElement | any>();
-    const [videoPlaying, setVideoPlaying] = useState(false);
+    const [videoPlaying, setVideoPlaying] = useState(true);
+    const [autoPlayVideo, setAutoPlayVideo] = useState(true);
     const [videoMode, setVideoMode] = useState(false);
     const [allVideo, setAllVideo] = useState<Video[]>([]);
     const [videoList, setVideoList] = useState<Video[]>([]);
+    const [currentTime, setCurrentTime] = useState<number>(0);
+    const [duration, setDuration] = useState<number>(0);
 
     const [currentIndex, setCurrentIndex] = useState(
         JSON.parse(localStorage.getItem('nct-current-index') as any) || 0
     );
-
     useEffect(() => {
         if (data) {
             const arr = data.reduce((final, item) => {
@@ -85,6 +99,12 @@ export const VideoPlayerContextProvider: FC<{ children: React.ReactNode }> = ({
         setVideoMode,
         allVideo,
         setAllVideo,
+        autoPlayVideo,
+        setAutoPlayVideo,
+        currentTime,
+        setCurrentTime,
+        duration,
+        setDuration,
     };
 
     return (

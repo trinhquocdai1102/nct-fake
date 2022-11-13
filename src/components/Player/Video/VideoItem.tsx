@@ -2,6 +2,7 @@ import React, { FC, Fragment } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from 'react-router-dom';
 import { Video } from '../../../context/VideoPlayerContext';
+import { imgNotFound } from '../../../utils/constants';
 
 interface VideoItemProps {
     video: Video;
@@ -14,7 +15,11 @@ const VideoItem: FC<VideoItemProps> = ({ video, handleClick }) => {
             <Link to={`video/${video.key}`} onClick={() => handleClick(video)}>
                 <div className='rounded-sm overflow-hidden'>
                     <LazyLoadImage
-                        src={video.thumbnail}
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null;
+                            currentTarget.src = imgNotFound;
+                        }}
+                        src={video.thumbnail ?? imgNotFound}
                         alt={video.title}
                         className='w-full rounded-sm'
                     />

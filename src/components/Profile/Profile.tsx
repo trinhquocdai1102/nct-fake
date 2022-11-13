@@ -3,7 +3,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import { ProfileContext } from '../../context/ProfileContext';
-import { avatarDefault } from '../../utils/constants';
+import { avatarDefault, imgNotFound } from '../../utils/constants';
 import { profileList } from '../../utils/profile';
 
 interface ProfileProps {
@@ -28,7 +28,11 @@ const Profile: FC<ProfileProps> = ({ profileData }) => {
                 <div className='flex items-center justify-center md:w-auto w-full'>
                     <div className='line w-[160px] h-auto max-w-full aspect-[1/1] relative'>
                         <LazyLoadImage
-                            src={profileData?.avatar || avatarDefault}
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null;
+                                currentTarget.src = imgNotFound;
+                            }}
+                            src={profileData?.avatar ?? avatarDefault}
                             alt={profileData?.name}
                             width='100%'
                             height='100%'

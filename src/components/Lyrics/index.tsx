@@ -18,10 +18,6 @@ const Lyrics: FC<LyricsProps> = ({ lyric }) => {
         return { __html: lyric?.lyric?.lyric || data?.lyric?.lyric };
     }
 
-    console.log(data);
-
-    console.log(key);
-
     const handleShowMoreLyrics = () => {
         if (showMore === false) {
             setShowMore(true);

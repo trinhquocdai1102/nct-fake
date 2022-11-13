@@ -10,7 +10,7 @@ import SongList from '../../components/Song/SongList';
 import { db } from '../../config/firebase';
 import { AuthContext } from '../../context/AuthContext';
 import { SongPlayerContext } from '../../context/SongPlayerContext';
-import { avatarDefault, favoriteImg } from '../../utils/constants';
+import { avatarDefault, favoriteImg, imgNotFound } from '../../utils/constants';
 
 const FavoriteDetail = () => {
     const { isLogged } = useContext(AuthContext);
@@ -66,7 +66,11 @@ const FavoriteDetail = () => {
                                 <div className='w-[60%] h-[6px] ml-[20%] rounded-tl-[4px] rounded-tr-[4px] bg-third-color'></div>
                                 <div className='w-[80%] h-[6px] ml-[10%] rounded-tl-[4px] rounded-tr-[4px] bg-[rgba(28,30,32,0.1)]'></div>
                                 <LazyLoadImage
-                                    src={favoriteImg}
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = imgNotFound;
+                                    }}
+                                    src={favoriteImg ?? imgNotFound}
                                     alt='favorite'
                                     width='100%'
                                     height='100%'
@@ -104,7 +108,12 @@ const FavoriteDetail = () => {
                                 <div className='flex gap-[8px] items-center'>
                                     <div className='w-[38px] h-[38px] rounded-full truncate text-main-color'>
                                         <img
-                                            src={user?.avatar || avatarDefault}
+                                            onError={({ currentTarget }) => {
+                                                currentTarget.onerror = null;
+                                                currentTarget.src =
+                                                    avatarDefault;
+                                            }}
+                                            src={user?.avatar ?? avatarDefault}
                                             alt='uploadBy'
                                         />
                                     </div>

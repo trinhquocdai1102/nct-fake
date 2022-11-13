@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { imgNotFound } from '../../utils/constants';
 
 interface SongRankingProps {
     data: any;
@@ -21,10 +22,14 @@ const SongRanking: FC<SongRankingProps> = ({ data, index, handlePlayAll }) => {
                 <div className='ml-4 bg-gray-100 w-full rounded-md p-2 flex flex-1'>
                     <div className='w-10 h-10 rounded-md overflow-hidden'>
                         <LazyLoadImage
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null;
+                                currentTarget.src = imgNotFound;
+                            }}
                             effect='blur'
                             width='100%'
                             height='100%'
-                            src={data?.thumbnail}
+                            src={data?.thumbnail ?? imgNotFound}
                             alt={data?.title}
                         />
                     </div>

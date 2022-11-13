@@ -51,8 +51,12 @@ const PlayerThumb: FC<PlayerThumbProps> = ({
                     <div className='pr-4 pl-4 pb-4'>
                         <div className='w-full aspect-[1/1]'>
                             <LazyLoadImage
+                                onError={({ currentTarget }) => {
+                                    currentTarget.onerror = null;
+                                    currentTarget.src = imgNotFound;
+                                }}
                                 className='rounded-md border'
-                                src={thumbnail || imgNotFound}
+                                src={thumbnail ?? imgNotFound}
                                 effect='blur'
                             />
                         </div>

@@ -7,6 +7,7 @@ import Error from '../../components/Common/Error';
 import TopicDetailSkeleton from '../../components/Skeleton/TopicDetailSkeleton';
 import ItemCmp from '../../components/Slider/Item';
 import GridLayout from '../../layout/GridLayout';
+import { avatarDefault } from '../../utils/constants';
 
 const TopicDetail = () => {
     const { key } = useParams();
@@ -55,7 +56,11 @@ const TopicDetail = () => {
                 <div className='px-4'>
                     <div className='aspect-[3/1] w-full'>
                         <img
-                            src={data?.topic?.coverImageURL}
+                            onError={({ currentTarget }) => {
+                                currentTarget.onerror = null;
+                                currentTarget.src = avatarDefault;
+                            }}
+                            src={data?.topic?.coverImageURL ?? avatarDefault}
                             alt={data?.topic?.title}
                         />
                     </div>

@@ -95,6 +95,14 @@ const Sidebar = () => {
                                     >
                                         <div className='w-[24px] h-auto rounded-full overflow-hidden mr-1'>
                                             <img
+                                                onError={({
+                                                    currentTarget,
+                                                }) => {
+                                                    currentTarget.onerror =
+                                                        null;
+                                                    currentTarget.src =
+                                                        avatarDefault;
+                                                }}
                                                 src={
                                                     isLogged?.avatar ??
                                                     avatarDefault

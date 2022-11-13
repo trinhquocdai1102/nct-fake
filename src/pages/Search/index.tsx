@@ -116,7 +116,11 @@ const Search = () => {
                                         key={item}
                                         className='bg-gray-200 py-1 pl-2 flex items-center justify-between rounded-sm cursor-pointer hover:text-second-color text-main-color w-full h-[36px]'
                                     >
-                                        <Link to={`/results?q=${item.name}`}>
+                                        <Link
+                                            to={`/results?q=${encodeURIComponent(
+                                                item
+                                            )}`}
+                                        >
                                             <p className='text-sm font-normal ml-1'>
                                                 {item}
                                             </p>

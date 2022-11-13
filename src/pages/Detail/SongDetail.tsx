@@ -10,7 +10,7 @@ import Error from '../../components/Common/Error';
 import Lyrics from '../../components/Lyrics';
 import DetailSkeleton from '../../components/Skeleton/DetailSkeleton';
 import { SongPlayerContext } from '../../context/SongPlayerContext';
-import { avatarDefault } from '../../utils/constants';
+import { avatarDefault, imgNotFound } from '../../utils/constants';
 
 const SongDetails = () => {
     const { key } = useParams();
@@ -42,7 +42,11 @@ const SongDetails = () => {
                         <div className='flex items-center justify-center md:w-auto w-full'>
                             <div className='line w-[238px] max-w-full aspect-[1/1] bg-gray-400 rounded-md relative'>
                                 <LazyLoadImage
-                                    src={data?.song?.thumbnail}
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = imgNotFound;
+                                    }}
+                                    src={data?.song?.thumbnail ?? imgNotFound}
                                     alt={data?.song?.title}
                                     width='100%'
                                     height='100%'
@@ -84,7 +88,10 @@ const SongDetails = () => {
                                         >
                                             <img
                                                 className='rounded-full'
-                                                src={item.imageUrl}
+                                                src={
+                                                    item.imageUrl ||
+                                                    avatarDefault
+                                                }
                                             />
                                         </Link>
                                     ))}

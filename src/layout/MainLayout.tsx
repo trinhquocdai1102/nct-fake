@@ -85,7 +85,10 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
     });
 
     useEffect(() => {
-        if (location.pathname.includes('/video/')) {
+        if (
+            location.pathname.includes('/video/') &&
+            location.key !== 'default'
+        ) {
             setVideoMode(true);
         } else {
             setVideoMode(false);
