@@ -88,8 +88,16 @@ const SongDetails = () => {
                                         >
                                             <img
                                                 className='rounded-full'
+                                                onError={({
+                                                    currentTarget,
+                                                }) => {
+                                                    currentTarget.onerror =
+                                                        null;
+                                                    currentTarget.src =
+                                                        avatarDefault;
+                                                }}
                                                 src={
-                                                    item.imageUrl ||
+                                                    item.imageUrl ??
                                                     avatarDefault
                                                 }
                                             />
@@ -113,8 +121,12 @@ const SongDetails = () => {
                         <div className='flex gap-[8px] items-center'>
                             <div className='w-[38px] h-[38px] rounded-full truncate text-main-color'>
                                 <img
+                                    onError={({ currentTarget }) => {
+                                        currentTarget.onerror = null;
+                                        currentTarget.src = avatarDefault;
+                                    }}
                                     src={
-                                        data?.song?.uploadBy?.avatarUrl ||
+                                        data?.song?.uploadBy?.avatarUrl ??
                                         avatarDefault
                                     }
                                     alt='uploadBy'
